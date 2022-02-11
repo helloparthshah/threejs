@@ -4,11 +4,14 @@ import React, { useRef, useEffect } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Block, useBlock } from "./blocks"
 import state from "./store"
+import {
+  Html
+} from '@react-three/drei'
 import "./App.css"
 
 function Plane({ color = "white", ...props }) {
   return (
-    <mesh {...props} onClick={(e) => alert('click')}>
+    <mesh {...props}>
       <planeGeometry />
       <meshBasicMaterial color={color} />
     </mesh>
@@ -57,10 +60,14 @@ function App() {
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   return (
     <>
-      <Canvas linear orthographic camera={{ zoom: state.zoom, position: [0, 0, 500] }}>
+      <Canvas linear flat orthographic camera={{ zoom: state.zoom, position: [0, 0, 500] }}>
         {/* First section */}
         <Block factor={1.5} offset={0}>
-          <Content left />
+          <Content left>
+            <Html>
+              <h1>Hello there</h1>
+            </Html>
+          </Content>
         </Block>
         {/* Second section */}
         <Block factor={2.0} offset={1}>
