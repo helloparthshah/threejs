@@ -18,14 +18,19 @@ function Plane({ color = "white", ...props }) {
   useEffect(() => {
     // Split the color into h,s and l
     const hsl = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/)
-    console.log(hsl)
     const h = parseInt(hsl[1])
     const s = parseInt(hsl[2])
     const l = parseInt(hsl[3])
     setColor(`hsl(${h}, ${s}%, ${Math.floor(l * (hovered ? 1.05 : 1))}%)`)
   }, [color, hovered])
   return (
-    <mesh {...props} onPointerOver={(e) => set(true)} onPointerOut={(e) => set(false)}>
+    <mesh {...props} onPointerOver={(e) => {
+      document.body.style.cursor = "pointer";
+      set(true)
+      }} onPointerOut={(e) => {
+        document.body.style.cursor = "auto";
+        set(false)
+        }}>
       <planeGeometry />
       <meshBasicMaterial color={lcolor} />
     </mesh>
@@ -46,7 +51,7 @@ function Page({...props}) {
     <>
       <group ref={group}>
         <Plane scale={[width/1.75,width/1.75/1.75,1]} color="hsl(139, 38%, 82%)" position={[0, 1, 0]}/>
-        <Image scale={[6,6,1]} ref={img} url={url}/>
+        <Image onClick={(e)=>document.location="https://helloparthshah.github.io"} scale={[6,6,1]} ref={img} url={url}/>
         <Plane scale={[7,7,1]} color="hsl(139, 38%, 82%)" position={[0, -height,0]}/>
         <Plane scale={[7,7,1]} color="hsl(139, 38%, 82%)" position={[0, -height*2,0]}/>
         <Plane scale={[100, width/2, 1]} rotation={[0, 0, Math.PI / 4]} position={[0, height, -1]} color="hsl(177, 51%, 93%)" />
@@ -59,7 +64,7 @@ function App() {
   return (
     <>
       <Canvas linear flat orthographic camera={{ zoom: state.zoom, position: [0, 0, 20] }}>
-        <ScrollControls pages={state.pages} damping={4}>
+        <ScrollControls pages={state.pages}>
           <Scroll>
             <Page />
           </Scroll>
