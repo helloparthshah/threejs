@@ -46,7 +46,6 @@ function Page({...props}) {
   const data = useScroll()
   const group = useRef()
   const img = useRef()
-  const url=require('./test.jpg')
   const size = [width / 1.75, width / 1.75 / 1.75, 1]
   useFrame(() => {
     group.current.children[0].rotation.z = data.range(0, Math.PI)
@@ -59,7 +58,6 @@ function Page({...props}) {
     <>
       <group ref={group}>
         <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, 1, 0]} hoverable={true}/>
-        <Image onClick={(e)=>document.location="https://helloparthshah.github.io"} scale={[width / 1.75-1,width / 1.75 / 1.75-1,1]} ref={img} url={url}/>
         <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height+1,0]}/>
         <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height*2+1,0]}/>
         <Plane scale={[100, width/2, 1]} rotation={[0, 0, Math.PI / 4]} position={[0, height, -1]} color="hsl(177, 51%, 93%)" />
