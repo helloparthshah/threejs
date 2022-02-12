@@ -49,6 +49,9 @@ function Page({...props}) {
   const url=require('./test.jpg')
   const size = [width / 1.75, width / 1.75 / 1.75, 1]
   useFrame(() => {
+    group.current.children[0].rotation.z = data.range(0, 1 / 2 * Math.PI)
+    group.current.children[2].rotation.z = -data.range(0, 1 / 2 * Math.PI)
+    group.current.children[3].rotation.z = data.range(0, 1 / 2 * Math.PI)
     group.current.children[1].position.y = 1 + data.range(0, 1 / 3)
     group.current.children[4].position.y = -data.offset * height * 5 + height*1.3
   })
