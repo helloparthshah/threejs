@@ -11,6 +11,7 @@ body {
   color: #606063;
   overflow: hidden;
   font-family: "News Cycle", sans-serif;
+  overscroll-behavior: none;
 }
 
 #root {
@@ -20,19 +21,12 @@ body {
 }
 
 canvas {
+  width: 100vw;
+  height: 100vh;
   position: absolute;
 }
 
 .loading {
   padding: 10px;
   transform: translate3d(-50%, -50%, 0);
-}
-
-.scrollArea {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: auto;
 }

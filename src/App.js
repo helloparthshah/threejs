@@ -1,94 +1,73 @@
 import * as THREE from "three"
 import ReactDOM from "react-dom"
-import React, { useRef, useEffect } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { Block, useBlock } from "./blocks"
+import React, { useRef, useEffect, useState } from "react"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import state from "./store"
 import {
-  Html
+  Html,
+  useScroll,
+  Scroll,
+  ScrollControls,
+  Image
 } from '@react-three/drei'
 import "./App.css"
 
 function Plane({ color = "white", ...props }) {
+  const [hovered, set] = useState(false)
+  const [lcolor, setColor] = useState(color)
+  useEffect(() => {
+    // Split the color into h,s and l
+    const hsl = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/)
+    console.log(hsl)
+    const h = parseInt(hsl[1])
+    const s = parseInt(hsl[2])
+    const l = parseInt(hsl[3])
+    setColor(`hsl(${h}, ${s}%, ${Math.floor(l * (hovered ? 1.05 : 1))}%)`)
+  }, [color, hovered])
   return (
-    <mesh {...props}>
+    <mesh {...props} onPointerOver={(e) => set(true)} onPointerOut={(e) => set(false)}>
       <planeGeometry />
-      <meshBasicMaterial color={color} />
+      <meshBasicMaterial color={lcolor} />
     </mesh>
   )
 }
 
-function Cross() {
-  const ref = useRef()
-  const { viewportHeight } = useBlock()
+function Page({...props}) {
+  const { width, height } = useThree((state) => state.viewport)
+  const data = useScroll()
+  const group = useRef()
+  const img = useRef()
+  const url=require('./test.jpg')
   useFrame(() => {
-    const curTop = state.top.current
-    const curY = ref.current.rotation.z
-    const nextY = (curTop / ((state.pages - 1) * viewportHeight * state.zoom)) * Math.PI
-    ref.current.rotation.z = THREE.MathUtils.lerp(curY, nextY, 0.1)
+    group.current.children[1].position.y = 1 + data.range(0, 1 / 3)
+    group.current.children[4].position.y = -data.offset * height * 5 + height
   })
   return (
-    <group ref={ref} scale={[2, 2, 2]}>
-      <Plane scale={[1, 0.2, 0.2]} color="#e2bfca" />
-      <Plane scale={[0.2, 1, 0.2]} color="#e2bfca" />
-    </group>
-  )
-}
-
-function Content({ left, children }) {
-  const { contentMaxWidth, canvasWidth, margin } = useBlock()
-  const aspect = 1.75
-  const alignRight = (canvasWidth - contentMaxWidth - margin) / 2
-  return (
-    <group position={[alignRight * (left ? -1 : 1), 0, 0]}>
-      <Plane scale={[contentMaxWidth, contentMaxWidth / aspect, 1]} color="#bfe2ca" />
-      {children}
-    </group>
-  )
-}
-
-function Stripe() {
-  const { contentMaxWidth } = useBlock()
-  return (
-    <Plane scale={[100, contentMaxWidth, 1]} rotation={[0, 0, Math.PI / 4]} position={[0, 0, -1]} color="#e3f6f5" />
+    <>
+      <group ref={group}>
+        <Plane scale={[width/1.75,width/1.75/1.75,1]} color="hsl(139, 38%, 82%)" position={[0, 1, 0]}/>
+        <Image scale={[6,6,1]} ref={img} url={url}/>
+        <Plane scale={[7,7,1]} color="hsl(139, 38%, 82%)" position={[0, -height,0]}/>
+        <Plane scale={[7,7,1]} color="hsl(139, 38%, 82%)" position={[0, -height*2,0]}/>
+        <Plane scale={[100, width/2, 1]} rotation={[0, 0, Math.PI / 4]} position={[0, height, -1]} color="hsl(177, 51%, 93%)" />
+      </group>
+    </>
   )
 }
 
 function App() {
-  const scrollArea = useRef()
-  const onScroll = (e) => (state.top.current = e.target.scrollTop)
-  useEffect(() => void onScroll({ target: scrollArea.current }), [])
   return (
     <>
-      <Canvas linear flat orthographic camera={{ zoom: state.zoom, position: [0, 0, 500] }}>
-        {/* First section */}
-        <Block factor={1.5} offset={0}>
-          <Content left>
-            <Html>
-              <h1>Hello there</h1>
-            </Html>
-          </Content>
-        </Block>
-        {/* Second section */}
-        <Block factor={2.0} offset={1}>
-          <Content />
-        </Block>
-        {/* Stripe */}
-        <Block factor={-1.0} offset={1}>
-          <Stripe />
-        </Block>
-        {/* Last section */}
-        <Block factor={1.5} offset={2}>
-          <Content left>
-            <Block factor={-0.5}>
-              <Cross />
-            </Block>
-          </Content>
-        </Block>
+      <Canvas linear flat orthographic camera={{ zoom: state.zoom, position: [0, 0, 20] }}>
+        <ScrollControls pages={state.pages} damping={4}>
+          <Scroll>
+            <Page />
+          </Scroll>
+          <Scroll html>
+            <h1>Hello there</h1>
+          </Scroll>
+        </ScrollControls>
       </Canvas>
-      <div className="scrollArea" ref={scrollArea} onScroll={onScroll}>
-        <div style={{ height: `${state.pages * 100}vh` }} />
-      </div>
     </>
   )
 }
