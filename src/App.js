@@ -12,7 +12,7 @@ import {
 } from '@react-three/drei'
 import "./App.css"
 
-function Plane({ color = "white", ...props }) {
+function Plane({hoverable=false, color = "white", ...props }) {
   const [hovered, set] = useState(false)
   const [lcolor, setColor] = useState(color)
   useEffect(() => {
@@ -25,11 +25,15 @@ function Plane({ color = "white", ...props }) {
   }, [color, hovered])
   return (
     <mesh {...props} onPointerOver={(e) => {
-      document.body.style.cursor = "pointer";
-      set(true)
+      if (hoverable) {
+        document.body.style.cursor = "pointer";
+        set(true)
+      }
       }} onPointerOut={(e) => {
+      if (hoverable) {
         document.body.style.cursor = "auto";
         set(false)
+      }
         }}>
       <planeGeometry />
       <meshBasicMaterial color={lcolor} />
@@ -43,17 +47,18 @@ function Page({...props}) {
   const group = useRef()
   const img = useRef()
   const url=require('./test.jpg')
+  const size = [width / 1.75, width / 1.75 / 1.75, 1]
   useFrame(() => {
     group.current.children[1].position.y = 1 + data.range(0, 1 / 3)
-    group.current.children[4].position.y = -data.offset * height * 5 + height
+    group.current.children[4].position.y = -data.offset * height * 5 + height*1.3
   })
   return (
     <>
       <group ref={group}>
-        <Plane scale={[width/1.75,width/1.75/1.75,1]} color="hsl(139, 38%, 82%)" position={[0, 1, 0]}/>
-        <Image onClick={(e)=>document.location="https://helloparthshah.github.io"} scale={[6,6,1]} ref={img} url={url}/>
-        <Plane scale={[7,7,1]} color="hsl(139, 38%, 82%)" position={[0, -height,0]}/>
-        <Plane scale={[7,7,1]} color="hsl(139, 38%, 82%)" position={[0, -height*2,0]}/>
+        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, 1, 0]} hoverable={true}/>
+        <Image onClick={(e)=>document.location="https://helloparthshah.github.io"} scale={[width / 1.75-1,width / 1.75 / 1.75-1,1]} ref={img} url={url}/>
+        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height,0]}/>
+        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height*2,0]}/>
         <Plane scale={[100, width/2, 1]} rotation={[0, 0, Math.PI / 4]} position={[0, height, -1]} color="hsl(177, 51%, 93%)" />
       </group>
     </>
