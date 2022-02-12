@@ -60,8 +60,8 @@ function Page({...props}) {
       <group ref={group}>
         <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, 1, 0]} hoverable={true}/>
         <Image onClick={(e)=>document.location="https://helloparthshah.github.io"} scale={[width / 1.75-1,width / 1.75 / 1.75-1,1]} ref={img} url={url}/>
-        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height,0]}/>
-        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height*2,0]}/>
+        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height+1,0]}/>
+        <Plane scale={size} color="hsl(139, 38%, 82%)" position={[0, -height*2+1,0]}/>
         <Plane scale={[100, width/2, 1]} rotation={[0, 0, Math.PI / 4]} position={[0, height, -1]} color="hsl(177, 51%, 93%)" />
       </group>
     </>
