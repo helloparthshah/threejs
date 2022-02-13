@@ -71,7 +71,7 @@ function Project({ isHover = false, number = 0, ...props }) {
           0,
         ]}
       >
-        hello world!
+        Test
       </Html>
     </group>
   );
@@ -117,7 +117,7 @@ function Page({ ...props }) {
           color="#131313"
         />
         <Html ref={html} center wrapperClass="html">
-          <h1 id={"name"} style={{ fontSize: "6em" }}>
+          <h1 id={"name"} style={{ fontSize: "15vw" }}>
             Parth Shah
           </h1>
         </Html>
