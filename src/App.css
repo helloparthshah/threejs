@@ -31,7 +31,7 @@ canvas {
   transform: translate3d(-50%, -50%, 0);
 }
 
-.html{
+.html {
   white-space: nowrap;
   pointer-events: none;
 }
