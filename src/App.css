@@ -30,3 +30,8 @@ canvas {
   padding: 10px;
   transform: translate3d(-50%, -50%, 0);
 }
+
+.html{
+  white-space: nowrap;
+  pointer-events: none;
+}
